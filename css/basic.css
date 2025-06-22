@@ -1,0 +1,27 @@
+<style>
+p {
+ text-align:center
+}
+
+label,
+input,
+select,
+textarea {
+  display:inline-block;
+  vertical-align:middle;
+}
+
+.settings {
+    display:grid;
+    grid-template-columns: max-content max-content;
+    grid-gap:5px;
+    vertical-align: middle;
+}
+.settings label       { text-align:right; }
+.settings label:after { content: ":"; }
+
+.formfield * {
+  vertical-align: middle;
+}
+
+</style>
