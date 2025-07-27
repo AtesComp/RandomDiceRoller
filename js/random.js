@@ -1,4 +1,6 @@
 var RandomArray = new Uint32Array(1);
+var CollectionRow = 0;
+var Timestamp = 0;
 
 function getRandom(min, max) {
   window.crypto.getRandomValues(RandomArray);
@@ -27,20 +29,19 @@ function getDiceRoll() {
     return;
   }
 
-  var myResult = '<h1>';
+  var myResult = '<h1>'; // ...start result text
   var myVal = 0;
+  var myBaseColor = document.getElementById('dieColor').value.trim();
   for (i=0; i<myCnt; i++) {
+    var myColor = myBaseColor;
     var myDie = getRandom(1, mySides);
-    var myColor = 4; // White
     if (mySides == 6) {
-      myColor = document.getElementById('dieColor').value.trim();
       if (myColor == 6) {
         myColor = i % 6;
       }
     }
 
     var mySided = pad(mySides, 2);
-
     if ( dieFaces.indexOf(mySides) > -1 ) {
       myResult += '<img src="images/D' + mySided + '_' + colors[myColor] + '_' + myDie + '.png" alt="' + myDie + '" />';
     }
@@ -51,8 +52,8 @@ function getDiceRoll() {
       myResult += '' + myDie + ' ';
     }
     myVal += myDie;
-  }
-  myResult += '</h1>';
+  } // ...end loop
+  myResult += '</h1>'; // ...end result text
   myRollResult.innerHTML = myResult;
   myTotal = '<b>Total: ' + myVal + '</b>';
   document.getElementById('dieTotal').innerHTML = myTotal;
@@ -62,29 +63,44 @@ function getDiceRoll() {
 
   var bCollect = document.getElementById('collectRoll').value.trim();
   if (bCollect == 'true') {
-    document.getElementById('reportRolls').innerHTML += '<b>' + myVal + '</b><br />';
+    document.getElementById('reportRolls').innerHTML +=
+      '<tr>' +
+        '<td><input type="checkbox" name="roll' + CollectionRow + '" value="rollSel' + CollectionRow + '"/></td>' +
+        '<td>' + myVal + '</td>' +
+        '<td>' + Timestamp + '</td>' +
+      '</tr>';
+    CollectionRow += 1;
   }
 //  printRoll();
 }
 
 function getTimestamp() {
-  document.getElementById('timestamp').innerHTML = (new Date()).toISOString();
+  Timestamp = (new Date()).toISOString();
+}
+
+function setTimestamp(valTime) {
+  document.getElementById('timestamp').innerHTML = Timestamp;
 }
 
 function setCollect() {
   var bCollect = document.getElementById('collectRoll').value.trim();
-  if (bCollect == 'true') {
+  if (bCollect == 'true') { // ...changing to false...
       document.getElementById('collectRoll').value = 'false';
+      CollectionRow = 0;
       document.getElementById('reportRolls').innerHTML = '';
   }
-  else {
+  else { // ...changing to true...
       document.getElementById('collectRoll').value = 'true';
+      CollectionRow = 0;
+      document.getElementById('reportRolls').innerHTML =
+        '<tr><th>Mark</th><th>Roll</th><th>Time</th></tr>';
   }
 }
 
 function getRoll() {
-  getDiceRoll();
   getTimestamp();
+  getDiceRoll();
+  setTimestamp();
 }
 
 function pad(num, size) {
@@ -97,3 +113,5 @@ function pad(num, size) {
     var s = '0'.repeat(size - nlen) + num;
     return s.substr(s.length - size);
 }
+
+getTimestamp();
