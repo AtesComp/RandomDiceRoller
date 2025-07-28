@@ -1,6 +1,7 @@
 var RandomArray = new Uint32Array(1);
 var CollectionRow = 0;
 var Timestamp = 0;
+var SortAscend = [ false, false, false ];
 
 function getRandom(min, max) {
   window.crypto.getRandomValues(RandomArray);
@@ -63,11 +64,16 @@ function getDiceRoll() {
 
   var bCollect = document.getElementById('collectRoll').value.trim();
   if (bCollect == 'true') {
-    document.getElementById('reportRolls').innerHTML +=
-      '<tr>' +
-        '<td><input type="checkbox" name="roll' + CollectionRow + '" value="rollSel' + CollectionRow + '"/></td>' +
+    document.getElementById('reportRollsBody').innerHTML +=
+      '<tr id="roll' + CollectionRow + '">' +
+        '<td><input type="checkbox" name="cbox' + CollectionRow + '"/></td>' +
         '<td>' + myVal + '</td>' +
         '<td>' + Timestamp + '</td>' +
+        '<td>' +
+          '<button onclick="removeRow(\'roll' + CollectionRow + '\')" ' +
+                  'type="button" ' +
+          '>&#10060;</button>' +
+        '</td>' +
       '</tr>';
     CollectionRow += 1;
   }
@@ -82,6 +88,12 @@ function setTimestamp(valTime) {
   document.getElementById('timestamp').innerHTML = Timestamp;
 }
 
+function removeRow(strRow) {
+  let tableBody = document.getElementById('reportRollsBody');
+  let tableRow = document.getElementById(strRow);
+  tableBody.deleteRow(tableRow.rowIndex - 1); // ...subtract 1 due to header row
+}
+
 function setCollect() {
   var bCollect = document.getElementById('collectRoll').value.trim();
   if (bCollect == 'true') { // ...changing to false...
@@ -93,8 +105,61 @@ function setCollect() {
       document.getElementById('collectRoll').value = 'true';
       CollectionRow = 0;
       document.getElementById('reportRolls').innerHTML =
-        '<tr><th>Mark</th><th>Roll</th><th>Time</th></tr>';
+        '<thead>' +
+          '<th><button type="button" onclick="sortTable(0)">Mark</button></th>' +
+          '<th><button type="button" onclick="sortTable(1)">Roll</button></th>' +
+          '<th><button type="button" onclick="sortTable(2)">Time</button></th>' +
+          '<th>Remove</th>' +
+        '</thead>' +
+        '<tbody id="reportRollsBody"></tbody>';
   }
+}
+
+function sortTable(iCol) {
+    let table = document.getElementById('reportRolls');
+    let tableBody = document.getElementById('reportRollsBody');
+    // Get the rows, removing the table header....
+    let rows = Array.from(table.rows).slice(1);
+    SortAscend[iCol] = ! SortAscend[iCol]; // ...flip Ascending / Descending
+
+    // Sort the rows...
+    let rowsSorted = rows.sort(
+      (rowA, rowB) => {
+        let cellA = rowA.cells[iCol];
+        let cellB = rowB.cells[iCol];
+        let iComp = 0; // ...default no sort
+
+        // On Mark column, sort by checked boolean value...
+        if (iCol === 0) {
+          let bA = cellA.children[0].checked;
+          let bB = cellB.children[0].checked;
+          iComp = (bA && ! bB) ? -1 : (bA === bB) ? 0 : 1;
+        }
+
+        // On Roll column, sort by integer value...
+        else if (iCol === 1) {
+          let iA = parseInt(cellA.innerText);
+          let iB = parseInt(cellB.innerText);
+          iComp = (iA < iB) ? -1 : (iA === iB) ? 0 : 1;
+        }
+
+        // On Time column, sort by date integer value...
+        else if (iCol === 2) {
+          let iA = Date.parse(cellA.innerText);
+          let iB = Date.parse(cellB.innerText);
+          iComp = (iA < iB) ? -1 : (iA === iB) ? 0 : 1;
+        }
+
+        // Otherwise, try sort by string values...
+        else iComp = cellA.innerText.localeCompare(cellB.innerText);
+
+        return SortAscend[iCol] ? iComp : -iComp;
+      }
+    );
+
+    // Update the table...
+    tableBody.innerHTML = '';
+    rowsSorted.forEach( row => tableBody.appendChild(row) );
 }
 
 function getRoll() {
@@ -111,7 +176,5 @@ function pad(num, size) {
     if (nlen > size)
         nlen = size;
     var s = '0'.repeat(size - nlen) + num;
-    return s.substr(s.length - size);
+    return s.substring(s.length - size);
 }
-
-getTimestamp();
