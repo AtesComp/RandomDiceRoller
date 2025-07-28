@@ -1,6 +1,9 @@
-p {
- text-align:left
+body {
+  background-color: #000000;
+  color: #c0c0c0;
 }
+
+p { text-align:left; }
 
 label,
 input,
@@ -10,15 +13,69 @@ textarea {
   vertical-align:middle;
 }
 
-.settings {
-    display:grid;
-    grid-template-columns: max-content max-content;
-    grid-gap:5px;
-    vertical-align: middle;
+th:nth-child(1) {
+  text-align:left;
+  padding: 0px 0px 0px 0px;
 }
-.settings label       { text-align:right; }
-.settings label:after { content: ":"; }
+th:nth-child(2) {
+  text-align:left;
+  padding: 0px 0px 0px 4px;
+}
+th:nth-child(3) {
+  text-align:left;
+  padding: 0px 0px 0px 4px;
+}
+th:nth-child(4) {
+  text-align:left;
+  padding: 0px 0px 0px 4px;
+}
 
-.formfield * {
-  vertical-align: middle;
+td:nth-child(1) {
+  text-align:center;
 }
+td:nth-child(2) {
+  text-align:right;
+  padding: 0px 0px 0px 4px;
+}
+td:nth-child(3) {
+  text-align:left;
+  padding: 0px 0px 0px 4px;
+}
+td:nth-child(4) {
+  text-align:center;
+  padding: 0px 0px 0px 4px;
+}
+
+.warning {
+  background-color: #ffff90;
+  color: #000000;
+  padding: 0em .5em 0em .5em;
+  font-size:1.2em;
+  width: fit-content;
+}
+
+.panel {
+  border-radius: 10px;
+  border: 1px solid #808080;
+  min-width: 337px;
+  width: fit-content;
+  padding: 0px 10px 4px;
+}
+
+.p_input {
+  padding: 8px 0px 4px;
+  margin: 0px;
+}
+
+.grid_display {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-template-rows: max-content max-content;
+    grid-row-gap: 2px;
+    grid-column-gap: 8px;
+    align-items: center;
+    padding: 8px 0px 0px;
+    margin: 0px;
+}
+.grid_display label { text-align:right; }
+.grid_display label:after { content: ":"; }

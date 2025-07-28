@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/basic.css">
 </head>
 
-<body text="#c0c0c0" bgcolor="#000000">
+<body>
   <h1>Random Dice Roller</h1>
   <select name="dieColor" id="dieColor">
     <option value=0>Blue</option>
@@ -26,33 +26,29 @@
   </select>
 
   <noscript>
-  <p style="background-color:#ffff90;padding: 0em .5em 0em .5em;font-size:.9em"><strong>Warning:</strong> Your browser does not support JavaScript &#8211; Random numbers will not be generated</p>
+  <p class="warning"><strong>Warning:</strong> Your browser does not support JavaScript &#8211; die rolls will not be generated!</p>
   </noscript>
 
-  <p>
-    <label id="dieRollResult"></label>
-  </p>
-  <p>
-    <input name="dieCntRoll" id="dieCntRoll"  type="button" value="Roll" onclick="getRoll();"/>
-    <label id="dieTotal"></label>
-  </p>
-  <p>
-    <label for="timestamp">Time</label>
-    <span id="timestamp"></span>
-  </p>
-  <p name="dieParams" id="dieParams" class="settings">
-    <label for="dieCnt">Die Count</label>
-    <textarea name="dieCnt" id="dieCnt" rows="1" cols="5" onkeyup="if (event.which == 13){ getRoll(); }">3</textarea>
-    <param id="dieCntSave" value=3 />
-
-    <label for="dieSide">Die Sides</label>
-    <textarea name="dieSide" id=dieSide rows="1" cols="5" onkeyup="if (event.which == 13){ getRoll(); }">6</textarea>
-  </p>
-  <p>
-    <input type="checkbox" name="collectRoll" id="collectRoll" value="false" onclick="setCollect();"/>
-    <label for="collectRoll">Collect Rolls</label>
-  </p>
-  <table name="reportRolls" id="reportRolls"></table>
+  <p id="dieRollImage" />
+  <div class="panel">
+    <p name="dieDisplay" id="dieDisplay" class="grid_display">
+      <label for="dieTotal"><button name="dieRoll" id="dieRoll" onclick="getRoll();">Roll</button></label>
+      <span id="dieTotal"></span>
+      <label for="timestamp">Time</label>
+      <span id="timestamp"></span>
+    </p>
+    <p name="dieParams" id="dieParams" class="grid_display">
+      <label for="dieCount">Die #</label>
+      <textarea name="dieCount" id="dieCount" rows="1" cols="5" onkeyup="if (event.which == 13){ getRoll(); }">3</textarea>
+      <label for="dieSide">Sides</label>
+      <textarea name="dieSide" id=dieSide rows="1" cols="5" onkeyup="if (event.which == 13){ getRoll(); }">6</textarea>
+    </p>
+    <p class="p_input">
+      <input type="checkbox" name="collectRoll" id="collectRoll" value="false" onclick="setCollect();"/>
+      <label for="collectRoll">Collect Rolls</label>
+    </p>
+    <table name="reportRolls" id="reportRolls"></table>
+  </div>
 </body>
 </html>
 <script>getRoll();</script>
